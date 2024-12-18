@@ -1,0 +1,11 @@
+{
+  "name": "anticheat-socketio",
+  "version": "1.0.0",
+  "description": "server-side anti-cheat gaming library for socketIO games",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stark",
+  "license": "Public Domain"
+}
