@@ -7,5 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Stark",
-  "license": "Public Domain"
+  "license": "Public Domain",
+  "dependencies": {
+    "anticheat-socketio": "^1.0.0",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9",
+    "socketio": "^1.0.0"
+  }
 }
