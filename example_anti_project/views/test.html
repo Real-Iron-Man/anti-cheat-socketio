@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src = "/socket.io/socket.io.js"></script>
+    <!-- <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script> -->
+    <!-- Sources :   -->
+</head>
+
+<style>
+
+    .body, html{
+        color               : rgb(189, 189, 189);
+        background-color    : rgb(36, 36, 36);
+    }
+
+    .container{
+        left: 40vw;
+        top: 20vh;
+        position: absolute;
+    }
+
+</style>
+
+<body>
+    
+    <div class="container">
+        
+        Test Anti Cheat : 
+
+        <table>
+            <tr>
+                <td>
+                    <button onclick="send_socket_click_event()">Test Click Event</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="send_socket_move_event_ok()">Test Move Event OK</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="send_socket_move_event_bad()">Test Move Event Bad</button>
+                </td>
+            </tr>
+        </table>
+    
+        <table>
+            <tr>
+                <td>
+                    Click Counter
+                </td>
+                <td id = "click_counter"></td>
+            </tr>
+        </table>
+
+    </div>
+
+
+</body>
+
+<script>
+
+var socket  = io();
+
+socket.on("init_antiC", function(data){
+    // alert("init_antiC = " + JSON.stringify(data));
+});
+
+function send_socket_click_event(){
+    socket.emit('click_event');
+};
+
+socket.on("update_player_data", function(data){
+    // Perform game functions
+});
+
+var cd_move_ok = true; // cooldown (CD) flag
+var cd_interval_t = 1000;
+
+function send_socket_move_event_ok(){
+
+    if(!cd_move_ok){
+        return;
+    }else{
+
+        var move_package = {
+            "x" : 100,
+            "y" : 10
+        };
+        
+        cd_move_ok = false;
+
+        // End cooldown
+        setTimeout(function(){
+            cd_move_ok = true;
+        }, cd_interval_t)
+
+        socket.emit('move_event', move_package);
+
+    };
+
+};
+
+function send_socket_move_event_bad(){
+
+    var move_package = {
+        "x" : 1000,
+        "y" : 10
+    };
+
+    socket.emit('move_event', move_package);
+};
+
+socket.on("got_click", function(data){
+
+    var click_status = data.value;
+
+    if(click_status){
+        var current_click_value = document.getElementById("click_counter").innerText;
+        if(current_click_value == "" || current_click_value == "Potential cheating"){
+            document.getElementById("click_counter").innerText = 1;
+        }else{
+            document.getElementById("click_counter").innerText = Number(current_click_value)+1;
+        };
+
+        document.getElementById("click_counter").style.color = "rgb(189, 189, 189)";
+
+    }else{
+        document.getElementById("click_counter").style.color = "red";
+        document.getElementById("click_counter").innerText = "Potential cheating";
+    };
+
+})
+
+</script>
+
+</html>
